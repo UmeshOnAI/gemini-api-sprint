@@ -8,7 +8,7 @@ import google.generativeai as genai
 from PIL import Image
 
 # Load environment variables from .env file
-load_dotenv(dotenv_path='../.env')
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app) # Enable Cross-Origin Resource Sharing for frontend communication
@@ -18,10 +18,6 @@ api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
     raise ValueError("API Key not found. Please set the GEMINI_API_KEY in your .env file.")
 genai.configure(api_key=api_key)
-
-# --- AI Model Configuration ---
-chat_model = genai.GenerativeModel('gemini-pro')
-vision_model = genai.GenerativeModel('gemini-1.5-pro-latest')
 
 # --- System Prompts ---
 # This is the core persona for our dream analyst
@@ -34,6 +30,14 @@ Never state 'your dream means X'. Instead, ask reflective questions like, 'That'
 Maintain the context of the entire conversation to draw connections between different symbols the user describes.
 Keep your responses concise and focused on asking the next best question.
 """
+
+# --- AI Model Configuration ---
+# Initialize the generative model with the system prompt
+chat_model = genai.GenerativeModel(
+    'gemini-pro',
+    system_instruction=DREAM_ANALYST_PROMPT
+    )
+vision_model = genai.GenerativeModel('gemini-1.5-pro-latest')
 
 # This prompt instructs the vision model to act as an art director
 ART_DIRECTOR_PROMPT = """
@@ -60,13 +64,11 @@ def chat():
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
 
-    # Construct the full chat history for the model
-    full_history = [{"role": "user", "parts": [DREAM_ANALYST_PROMPT]}] # Start with the system prompt
-    full_history.extend(history)
-    full_history.append({"role": "user", "parts": [user_message]})
+    # Start the chat session with the user's history
+    chat_session = chat_model.start_chat(history=history)
     
-    chat_session = chat_model.start_chat(history=full_history)
-    response = chat_session.send_message(user_message)
+    # Send the new user message
+    response = chat_session.send_message({"role": "user", "parts": [user_message]})
     
     return jsonify({"reply": response.text})
 
