@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morpheus' Mirror</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/drawingboard.js/0.4.6/drawingboard.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/drawingboard.js/0.4.6/drawingboard.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Morpheus' Mirror</h1>
+        <p class="subtitle">Tell me about your dream. Click the button and begin speaking.</p>
+
+        <div id="chat-log" class="chat-log"></div>
+
+        <div id="controls">
+            <button id="record-btn">Start Recording</button>
+            <button id="show-canvas-btn" style="display:none;">Show Drawing Canvas</button>
+        </div>
+
+        <div id="drawing-container" style="display:none;">
+            <p>Sketch a key scene or object from your dream.</p>
+            <div id="drawing-board"></div>
+            <button id="generate-image-btn">Generate Vision</button>
+            <button id="hide-canvas-btn">Back to Chat</button>
+        </div>
+
+        <div id="image-display"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
