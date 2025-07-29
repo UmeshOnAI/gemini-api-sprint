@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isRecording = true;
         recordBtn.textContent = 'Stop Recording';
         recordBtn.style.backgroundColor = '#d92828';
+        speechSynthesis.cancel(); // Stop any currently speaking AI
     };
 
     recognition.onend = () => {
